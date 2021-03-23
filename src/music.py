@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import os
 import sys
 
@@ -62,20 +60,9 @@ def midi_to_ansi_note(midi_note: int) -> str:
     return f'{note_name}{note_number}'
 
 def midi_device_prompt() -> int:
-    '''Dump MIDI devices info and prompt user for a choice'''
-    for i in range(0, pygame.midi.get_count()):
-        (interf, name, inp, outp, opened) = pygame.midi.get_device_info(i)
-        print(f'Device: {i}')
-        print(f'\tInterface: {interf.decode("utf-8")}')
-        print(f'\tName: {name.decode("utf-8")}')
-        print(f'\tInput: {inp == 1}')
-        print(f'\tOutput: {outp == 1}')
-        print(f'\tOpened: {opened == 1}\n')
-
-    return int(input("Which MIDI device would you like to use ? "))
+    return 1
 
 def draw_keyboard(window) -> None:
-    '''Draw the octave keyboard on screen'''
 
     margin = window.get_width() // 140
 
@@ -125,7 +112,7 @@ def main() -> None:
         sys.exit(os.EX_USAGE)
 
     pygame.display.init()
-    pygame.display.set_caption('Girls can code (and play music)!')
+    pygame.display.set_caption('Pianoooo')
     window = pygame.display.set_mode((1280, 720))
     window.fill(color_grey)
     draw_keyboard(window)
@@ -135,7 +122,7 @@ def main() -> None:
     # Let's disable the others for performance
     # XXX: fix allowed events
     pygame.event.set_allowed(None)
-    pygame.event.set_allowed([pygame.KEYDOWN, pygame.KEYUP])
+    pygame.event.set_allowed([pygame.KEYDOWN, pygame.KEYUP, pygame.QUIT])
 
     # Create our MIDI handle
     print(f'Setting MIDI device to {midi_dev}')
@@ -145,6 +132,9 @@ def main() -> None:
     go_on = True
     while go_on:
         for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                quit()
 
             # Turn note on if known key
             if event.type == pygame.KEYDOWN:
